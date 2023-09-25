@@ -229,7 +229,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1270634726174116344, guid: 19d645676170ddc489194a051f5719b4, type: 3}
       propertyPath: slowRadius
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1270634726174116344, guid: 19d645676170ddc489194a051f5719b4, type: 3}
       propertyPath: maxAcceleration
@@ -302,7 +302,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -666899799776275130, guid: 9bdc2673189e0704e83ad3129eee4768, type: 3}
       propertyPath: slowRadius
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -666899799776275130, guid: 9bdc2673189e0704e83ad3129eee4768, type: 3}
       propertyPath: targetRadius
