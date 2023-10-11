@@ -18,7 +18,10 @@ public class MouseMove : Movement
     {
         if (Input.GetMouseButton(0))
         {
-            seekPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 tilePoint = GridManager.Instance.GetTileIndex(mousePos.x, mousePos.y);
+
+            seekPoint = tilePoint != Vector3.negativeInfinity ? tilePoint : seekPoint;
         }
         base.Update();
         if (!move)
@@ -26,7 +29,7 @@ public class MouseMove : Movement
             idleTimer += Time.deltaTime;
             if (idleTimer >= idleDuration)
             {
-                seekPoint = new Vector2(Random.Range(-6, 6), Random.Range(-5, 5));
+                seekPoint = new Vector2(Random.Range(0, 12), Random.Range(0, 11));
                 idleTimer = 0f;
             }
 

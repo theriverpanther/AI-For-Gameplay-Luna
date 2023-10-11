@@ -16,7 +16,11 @@ public class FollowTarget : Movement
     // Update is called once per frame
     protected override void Update()
     {
-        seekPoint = target.transform.position;
+        Vector2 playerGridPos = gridManager.GetTileIndex(target.transform.position);
+        if(!seekPoint.Equals(playerGridPos))
+        {
+            seekPoint = playerGridPos;
+        }
         base.Update();
     }
 }
