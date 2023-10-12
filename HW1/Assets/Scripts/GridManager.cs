@@ -58,6 +58,7 @@ public class GridManager : MonoBehaviour
                 t.ToggleWalkable();
                 foreach(Movement m in agents)
                 {
+                    // Curious if adding some vulnerability for agents would be worth to call this less
                     m.AStar();
                 }    
             }
