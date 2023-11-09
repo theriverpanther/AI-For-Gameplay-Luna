@@ -272,11 +272,11 @@ public class Movement : MonoBehaviour
     {
         Vector2 lastDir = Vector2.zero;
         Vector2 dir = Vector2.zero;
-        lastDir = (path.Peek() - pathList[0]).normalized;
+        lastDir = (pathList[0] - path.Peek()).normalized;
 
         for (int i = 0; i < pathList.Count - 1; i++)
         {
-            dir = (pathList[i] - pathList[i + 1]).normalized;
+            dir = (pathList[i + 1] - pathList[i]).normalized;
             if (dir != lastDir)
             {
                 path.Push(pathList[i]);
