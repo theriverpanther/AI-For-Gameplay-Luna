@@ -25,7 +25,8 @@ public class Movement : MonoBehaviour
 
     protected bool move = true;
 
-    [SerializeField] private Stack<Vector2> path = new Stack<Vector2>();
+    [SerializeField] protected Stack<Vector2> path = new Stack<Vector2>();
+    [SerializeField] protected List<Vector2> pathList = new List<Vector2>();
 
     [Header("Destination")]
     [SerializeField] protected Vector3 seekPoint = Vector3.zero;
@@ -35,8 +36,8 @@ public class Movement : MonoBehaviour
     [SerializeField] private List<Tile> closedList = new List<Tile>();
     [SerializeField] private List<Tile> openList = new List<Tile>();
 
-    private const int STRAIGHT_COST = 10;
-    private const int DIAGONAL_COST = 14;
+    protected const int STRAIGHT_COST = 10;
+    protected const int DIAGONAL_COST = 14;
 
     // Start is called before the first frame update
     protected virtual void Start()
@@ -123,12 +124,13 @@ public class Movement : MonoBehaviour
     /// Handles the A* pathfinding whenever called
     /// Utilizes heuristics to navigate to the desired endpoint
     /// </summary>
-    public void AStar()
+    public virtual void AStar()
     {
         // Clean old logic
         openList.Clear();
         closedList.Clear();
         path.Clear();
+        pathList.Clear();
 
         // Add starting node
         Tile startTile = gridManager.GetTileAtPoint(transform.position.x, transform.position.y);
@@ -162,6 +164,7 @@ public class Movement : MonoBehaviour
             {
                 // If current = destination, we have the path.
                 path = CalculatePath(endTile);
+                CleanPath();
             }
 
             openList.Remove(currentTile);
@@ -257,11 +260,29 @@ public class Movement : MonoBehaviour
         Tile currentTile = endTile;
         while(currentTile.prevTile != null)
         {
-            path.Push(currentTile.prevTile.Position);
+            //path.Push(currentTile.prevTile.Position);
+            pathList.Add(currentTile.prevTile.Position);
             currentTile = currentTile.prevTile;
         }
-        path.Pop();
+        //path.Pop();
         return path;
+    }
+
+    private void CleanPath()
+    {
+        Vector2 lastDir = Vector2.zero;
+        Vector2 dir = Vector2.zero;
+        lastDir = (path.Peek() - pathList[0]).normalized;
+
+        for (int i = 0; i < pathList.Count - 1; i++)
+        {
+            dir = (pathList[i] - pathList[i + 1]).normalized;
+            if (dir != lastDir)
+            {
+                path.Push(pathList[i]);
+                lastDir = dir;
+            }
+        }
     }
 
     /// <summary>
@@ -270,7 +291,7 @@ public class Movement : MonoBehaviour
     /// <param name="a">First tile to compare</param>
     /// <param name="b">Second tile to compare</param>
     /// <returns>The total cost it would take for the agent to navigate between the two tiles</returns>
-    private int CalculateDistanceCost(Tile a, Tile b)
+    protected virtual int CalculateDistanceCost(Tile a, Tile b)
     {
         if(a == null || b == null) return int.MaxValue;
         if(a.Position == null || b.Position == null) return int.MaxValue;

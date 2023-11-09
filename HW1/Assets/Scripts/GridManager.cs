@@ -10,8 +10,8 @@ public class GridManager : MonoBehaviour
     #region Variables
     public static GridManager Instance;
 
-    private int width = 20;
-    private int height = 11;
+    private int width = 15;
+    private int height = 30;
 
     [SerializeField] GameObject tilePrefab;
 
@@ -39,30 +39,30 @@ public class GridManager : MonoBehaviour
         GenerateGrid();
         // Get a list of all of the agents in the scene
         // Only for the intent to refresh their A* when enviornment changes
-        List<GameObject> temp = GameObject.FindGameObjectsWithTag("Player").ToList();
-        temp.AddRange(GameObject.FindGameObjectsWithTag("Agent"));
-        foreach(GameObject obj in temp)
-        {
-            agents.Add(obj.GetComponent<Movement>());
-        }
+        //List<GameObject> temp = GameObject.FindGameObjectsWithTag("Player").ToList();
+        //temp.AddRange(GameObject.FindGameObjectsWithTag("Agent"));
+        //foreach(GameObject obj in temp)
+        //{
+        //    agents.Add(obj.GetComponent<Movement>());
+        //}
     }
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(1))
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Tile t = GetTileAtPoint(mousePos.x, mousePos.y);
-            if (t != null)
-            {
-                t.ToggleWalkable();
-                foreach(Movement m in agents)
-                {
-                    // Curious if adding some vulnerability for agents would be worth to call this less
-                    m.AStar();
-                }    
-            }
-        }
+        //if(Input.GetMouseButtonDown(1))
+        //{
+        //    Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    Tile t = GetTileAtPoint(mousePos.x, mousePos.y);
+        //    if (t != null)
+        //    {
+        //        t.ToggleWalkable();
+        //        foreach(Movement m in agents)
+        //        {
+        //            // Curious if adding some vulnerability for agents would be worth to call this less
+        //            m.AStar();
+        //        }    
+        //    }
+        //}
     }
 
     void GenerateGrid() 
@@ -73,7 +73,7 @@ public class GridManager : MonoBehaviour
         {
             for(int y = 0; y < height; y++)
             {
-                spawnedTile = Instantiate(tilePrefab, new Vector3(x, y, 1), Quaternion.identity, transform);
+                spawnedTile = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
                 spawnedTile.name = $"Tile ({x},{y})";
 
                 // Tell the user the coordinates when hovering over
@@ -84,12 +84,38 @@ public class GridManager : MonoBehaviour
                 bool offsetTile = (x+y) % 2 == 0;
                 Tile t = spawnedTile.GetComponent<Tile>();
 
-                t.ChangeColor(offsetTile ? t.offsetColor : t.normalColor);
+                if (x == 0 || y == 0 || x == width - 1 || y == height - 1)
+                {
+                    t.ChangeColor(t.impassableColor);
+                    t.Walkable = false;
+                    t.gameObject.GetComponent<BoxCollider2D>().enabled = true;
+                }
+
+                else if(y == 24 && x < 10)
+                {
+                    t.ChangeColor(t.impassableColor);
+                    t.Walkable = false;
+                    t.gameObject.GetComponent<BoxCollider2D>().enabled = true;
+                }
+
+                else t.ChangeColor(offsetTile ? t.offsetColor : t.normalColor);
 
                 // Add the tile to the dictionary
                 tiles.Add(new Vector2(x, y), t);
             }
         }
+        GameObject propParent = GameObject.Find("Props");
+        int childCount = propParent.transform.childCount;
+        Tile temp;
+        for(int i = 0; i < childCount; i++)
+        {
+            tiles.TryGetValue(propParent.transform.GetChild(i).position, out temp);
+            temp.ChangeColor(temp.impassableColor);
+            temp.Walkable = false;
+            temp.gameObject.GetComponent<BoxCollider2D>().enabled = true;
+        }
+
+
         // If the camera needs to align with the grid, do so
         Camera.main.transform.position = new Vector3((float)width / 2.0f - 0.5f, (float)height / 2.0f - 0.5f, -10);
     }

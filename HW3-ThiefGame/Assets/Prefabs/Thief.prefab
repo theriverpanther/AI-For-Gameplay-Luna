@@ -118,7 +118,7 @@ Transform:
   m_Children:
   - {fileID: 6700285340903453005}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8026437639153047759
 SpriteRenderer:
@@ -186,9 +186,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
   maxSpeed: 10
-  maxAcceleration: 0
-  targetRadius: 0.05
-  slowRadius: 0
+  maxAcceleration: 40
+  targetRadius: 0.2
+  slowRadius: 10
   dt: 0.1
   seekPoint: {x: 0, y: 0, z: 0}
   lastSeekPoint: {x: 0, y: 0, z: 0}

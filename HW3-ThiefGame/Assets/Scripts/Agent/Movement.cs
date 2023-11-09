@@ -25,9 +25,9 @@ public class Movement : MonoBehaviour
 
     protected bool move = true;
 
-    [SerializeField] private Stack<Vector2> path = new Stack<Vector2>();
-    private Stack<Vector2> pathDupe = new Stack<Vector2>();
-    private List<Vector2> tempPath = new List<Vector2>();
+    [SerializeField] protected Stack<Vector2> path = new Stack<Vector2>();
+    protected Stack<Vector2> pathDupe = new Stack<Vector2>();
+    protected List<Vector2> tempPath = new List<Vector2>();
 
     [Header("Destination")]
     [SerializeField] protected Vector3 seekPoint = Vector3.zero;
@@ -93,8 +93,8 @@ public class Movement : MonoBehaviour
                 }
 
                 currentVelocity = new Vector2(
-                    currentVelocity.x + acceleration.x * Time.deltaTime,
-                    currentVelocity.y + acceleration.y * Time.deltaTime);
+                    currentVelocity.x + acceleration.x,
+                    currentVelocity.y + acceleration.y);
 
                 FaceTarget(currentVelocity);
 
@@ -132,6 +132,7 @@ public class Movement : MonoBehaviour
         closedList.Clear();
         path.Clear();
         pathDupe.Clear();
+        tempPath.Clear();
 
         // Add starting node
         Tile startTile = gridManager.GetTileAtPoint(transform.position.x, transform.position.y);
@@ -274,9 +275,9 @@ public class Movement : MonoBehaviour
         Vector2 lastDir = Vector2.zero;
         Vector2 dir = Vector2.zero;
         
-        for(int i = 1; i < tempPath.Count; i++)
+        for(int i = 0; i < tempPath.Count-1; i++)
         {
-            dir = (tempPath[i] - tempPath[i - 1]).normalized;
+            dir = (tempPath[i] - tempPath[i + 1]).normalized;
             if(dir != lastDir)
             {
                 pathDupe.Push(tempPath[i]);
@@ -339,5 +340,11 @@ public class Movement : MonoBehaviour
                 Gizmos.DrawSphere(pos, 0.05f);
             }
         }
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(seekPoint, 1f);
+        
+        Gizmos.color = Color.cyan;
+        if (path.Count > 0) Gizmos.DrawLine(transform.position, path.Peek());
     }
 }

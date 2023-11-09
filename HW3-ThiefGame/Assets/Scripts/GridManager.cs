@@ -49,12 +49,12 @@ public class GridManager : MonoBehaviour
         lastThiefPos = thiefPos;
         // Get a list of all of the agents in the scene
         // Only for the intent to refresh their A* when enviornment changes
-        //List<GameObject> temp = GameObject.FindGameObjectsWithTag("Player").ToList();
-        //temp.AddRange(GameObject.FindGameObjectsWithTag("Agent"));
-        //foreach(GameObject obj in temp)
-        //{
-        //    agents.Add(obj.GetComponent<Movement>());
-        //}
+        List<GameObject> temp = GameObject.FindGameObjectsWithTag("Player").ToList();
+        temp.AddRange(GameObject.FindGameObjectsWithTag("Agent"));
+        foreach(GameObject obj in temp)
+        {
+           agents.Add(obj.GetComponent<Movement>());
+        }
         agents.Add(Instantiate(thiefPrefab, thiefPos, Quaternion.identity).GetComponent<Movement>());
         agents.Add(Instantiate(guardPrefab, guardPos, Quaternion.identity).GetComponent<Movement>());
     }

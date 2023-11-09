@@ -6,10 +6,11 @@ public class Tile : MonoBehaviour
 {
     public Color normalColor = Color.green;
     public Color offsetColor = Color.cyan;
+    public Color impassableColor = Color.black;
 
     // Pathfinding logic
     [SerializeField] private Vector2 position;
-    private bool walkable = true;
+    [SerializeField] private bool walkable = true;
 
     public int gCost;
     public int hCost;
@@ -17,7 +18,11 @@ public class Tile : MonoBehaviour
     public Tile prevTile;
 
     public Vector2 Position { get { return position; } }
-    public bool Walkable { get { return walkable; } }
+    public bool Walkable
+    {
+        get { return walkable; }
+        set { walkable = value; }
+    }
 
     // Copy constructor, for the purpose of pathfinding
     // Definitely not the optimal solution but I think I dug myself into this
@@ -37,7 +42,6 @@ public class Tile : MonoBehaviour
         }
         // Set the position value only if it needs to be changed
         position = transform.position;
-        walkable = true;
     }
 
     public void ChangeColor(Color color)
